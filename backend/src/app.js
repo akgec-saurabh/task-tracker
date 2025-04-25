@@ -24,6 +24,8 @@ app.use("/api/v1/hello", (req, res) => {
 
 // routes
 app.use("/api/v1/users", userRoutes);
+app.use("/api/v1/project", projectRoutes);
+app.use("/api/v1/tasks", taskRoutes);
 
 // not found middleware
 app.use((req, res, next) => {
