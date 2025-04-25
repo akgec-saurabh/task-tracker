@@ -2,6 +2,7 @@ import express, { urlencoded } from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 import userRoutes from "./routes/user.routes.js";
+
 const app = express();
 
 app.use(
@@ -10,6 +11,9 @@ app.use(
     credentials: true,
   })
 );
+
+// middlewares
+app.use(express.json());
 app.use(urlencoded({ extended: true }));
 app.use(cookieParser());
 
@@ -18,6 +22,7 @@ app.use("/api/v1/hello", (req, res) => {
   res.send("Hello World");
 });
 
+// routes
 app.use("/api/v1/users", userRoutes);
 
 // not found middleware
