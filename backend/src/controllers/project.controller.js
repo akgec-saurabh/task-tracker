@@ -1,4 +1,4 @@
-import { createProject } from "../services/project.service";
+import { createProject } from "../services/project.service.js";
 
 const createProjectHandler = async (req, res) => {
   const { name } = req.body;
@@ -7,6 +7,7 @@ const createProjectHandler = async (req, res) => {
     name,
     createdBy: req.user._id,
   });
+
   res.status(201).json(project);
 };
 

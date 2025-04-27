@@ -1,5 +1,22 @@
 import { User } from "../models/user.model.js";
 import { ApiError } from "../utils/ApiError.js";
+import jwt from "jsonwebtoken";
+
+// Generate access and refresh tokens
+const generateAccessAndRefreshTokens = async (userId) => {
+  try {
+    const user = await User.findById(userId);
+    const accessToken = user.generateAccessToken();
+    const refreshToken = user.generateRefreshToken();
+
+    user.refreshToken = refreshToken;
+    await user.save({ validateBeforeSave: false });
+
+    return { accessToken, refreshToken };
+  } catch (error) {
+    throw new ApiError(500, "Something went wrong while generating tokens");
+  }
+};
 
 const registerUser = async (userData) => {
   const { email, password, name, country } = userData;
@@ -19,7 +36,9 @@ const registerUser = async (userData) => {
     password,
   });
 
-  const createdUser = await User.findById(user._id).select("-password");
+  const createdUser = await User.findById(user._id).select(
+    "-password -refreshToken"
+  );
 
   if (!createdUser) {
     throw new ApiError(500, "Something went wrong while registering the user");
@@ -43,11 +62,59 @@ const loginUser = async (email, password) => {
     throw new ApiError(401, "Invalid credentials");
   }
 
-  const loggedInUser = await User.findById(user._id).select("-password");
+  const { accessToken, refreshToken } = await generateAccessAndRefreshTokens(
+    user._id
+  );
+  const loggedInUser = await User.findById(user._id).select(
+    "-password -refreshToken"
+  );
 
   return {
     user: loggedInUser,
+    accessToken,
+    refreshToken,
   };
 };
 
-export { registerUser, loginUser };
+const logoutUser = async (userId) => {
+  await User.findByIdAndUpdate(
+    userId,
+    {
+      $unset: { refreshToken: 1 },
+    },
+    {
+      new: true,
+    }
+  );
+};
+
+const refreshAccessToken = async (refreshToken) => {
+  try {
+    if (!refreshToken) {
+      throw new ApiError(401, "Unauthorized request");
+    }
+
+    const decodedToken = jwt.verify(
+      refreshToken,
+      process.env.REFRESH_TOKEN_SECRET
+    );
+    const user = await User.findById(decodedToken?._id);
+
+    if (!user) {
+      throw new ApiError(401, "Invalid refresh token");
+    }
+
+    if (refreshToken !== user?.refreshToken) {
+      throw new ApiError(401, "Refresh token is expired or used");
+    }
+
+    const { accessToken, refreshToken: newRefreshToken } =
+      await generateAccessAndRefreshTokens(user._id);
+
+    return { accessToken, refreshToken: newRefreshToken };
+  } catch (error) {
+    throw new ApiError(401, error?.message || "Invalid refresh token");
+  }
+};
+
+export { registerUser, loginUser, logoutUser, refreshAccessToken };
