@@ -5,7 +5,9 @@ export default function Header() {
   return (
     <header className="bg-gray-800 h-16 text-white flex items-center">
       <div className="container mx-auto flex justify-between items-center">
-        <h1 className="text-2xl font-bold">Task Tracker</h1>
+        <h1 className="text-2xl font-bold">
+          <Link href="/">Task Tracker</Link>
+        </h1>
         <nav>
           <ul className="flex space-x-4">
             <li>
