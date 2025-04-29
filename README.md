@@ -1,4 +1,4 @@
-# Project Name
+# Task Tracker
 
 A full-stack application with React frontend and Node.js backend.
 
