@@ -11,7 +11,6 @@ import { ApiResponse } from "../utils/ApiResponse.js";
 /*                             Register a new user                            */
 /* -------------------------------------------------------------------------- */
 const signupUserHandler = async (req, res) => {
-  console.log(req.body);
   try {
     const { email, password, name, country } = req.body;
 

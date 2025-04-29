@@ -4,24 +4,27 @@ import React, { useState } from "react";
 
 interface TaskSwitchProps {
   initialStatus: "pending" | "in-progress" | "completed";
-  setStatus: (status: "pending" | "in-progress" | "completed") => void;
+  onStatusChange: (status: "pending" | "in-progress" | "completed") => void;
 }
 
-export default function TaskSwitch({ initialStatus }: TaskSwitchProps) {
+export default function TaskSwitch({
+  initialStatus,
+  onStatusChange,
+}: TaskSwitchProps) {
   const [status, setStatus] = useState<"pending" | "in-progress" | "completed">(
     initialStatus
   );
 
   const handleStatusChange = () => {
     setStatus((prv) => {
-      switch (prv) {
-        case "pending":
-          return "in-progress";
-        case "in-progress":
-          return "completed";
-        default:
-          return "pending";
-      }
+      const newStatus =
+        prv === "pending"
+          ? "in-progress"
+          : prv === "in-progress"
+          ? "completed"
+          : "pending";
+      onStatusChange(newStatus);
+      return newStatus;
     });
   };
 

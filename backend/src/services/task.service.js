@@ -5,12 +5,13 @@ const getTaskById = async (taskId) => {
   return task;
 };
 
-const updateTask = async (taskId, updateData) => {
-  const task = await Task.findByIdAndUpdate(
-    taskId,
-    { ...updateData },
-    { new: true }
-  );
+const getTasks = async () => {
+  const tasks = await Task.find();
+  return tasks;
+};
+
+const updateTask = async (taskId, status) => {
+  const task = await Task.findByIdAndUpdate(taskId, { status }, { new: true });
   return task;
 };
 
@@ -24,4 +25,4 @@ const createTask = async ({ title, description, projectId }) => {
   return newTask;
 };
 
-export { createTask };
+export { createTask, getTasks, updateTask, deleteTask };

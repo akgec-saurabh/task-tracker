@@ -5,4 +5,14 @@ const createProject = async (project) => {
   return newProject;
 };
 
-export { createProject };
+const getProjects = async (userId) => {
+  const projects = await Project.find({ createdBy: userId });
+  return projects;
+};
+
+const getProjectById = async (id) => {
+  const project = await Project.findById(id);
+  return project;
+};
+
+export { createProject, getProjects, getProjectById };

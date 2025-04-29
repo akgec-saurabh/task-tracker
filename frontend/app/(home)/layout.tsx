@@ -1,4 +1,5 @@
 import Header from "@/components/header";
+import ProjectDialogForm from "@/components/project-dialog-form";
 
 export default function HomeLayout({
   children,
@@ -6,9 +7,14 @@ export default function HomeLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <main>
+    <>
       <Header />
-      {children}
-    </main>
+      <main className="container">
+        <div className="flex flex-col gap-4 my-4">
+          {children}
+          <ProjectDialogForm />
+        </div>
+      </main>
+    </>
   );
 }

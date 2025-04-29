@@ -1,5 +1,6 @@
 "use client";
 import React, { useState } from "react";
+import { XMarkIcon } from "@heroicons/react/24/outline";
 interface DialogProps {
   children: React.ReactNode;
   isOpen: boolean;
@@ -10,7 +11,7 @@ export default function Dialog({ children, isOpen, setIsOpen }: DialogProps) {
     <>
       <dialog
         open={isOpen}
-        className=" shadow p-4 rounded-lg absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"
+        className=" shadow p-4 z-50 bg-white rounded-lg absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"
       >
         {children}
 
@@ -18,7 +19,7 @@ export default function Dialog({ children, isOpen, setIsOpen }: DialogProps) {
           className="absolute top-4 right-4"
           onClick={() => setIsOpen(false)}
         >
-          x
+          <XMarkIcon className="size-6" />
         </button>
       </dialog>
     </>
